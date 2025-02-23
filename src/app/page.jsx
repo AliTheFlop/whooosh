@@ -1,8 +1,42 @@
-import { ArrowBigRightDash, SearchIcon } from 'lucide-react';
+'use client';
 
+import { SearchIcon } from 'lucide-react';
 import UserMessage from '@/components/UserMessage';
+import { logout } from '@/app/actions';
+import { useGlobalStore } from '@/store/zustand';
+import { createClient } from '@/utils/supabase/client';
+import { useEffect } from 'react';
 
 export default function Home() {
+    const supabase = createClient();
+
+    const user = useGlobalStore((state) => state.user);
+    const setUser = useGlobalStore((state) => state.setUser);
+
+    useEffect(() => {
+        async function initUser() {
+            const { data } = await supabase.auth.getUser();
+
+            if (data.user) {
+                setUser(data.user);
+            }
+        }
+
+        initUser();
+    }, []);
+
+    async function signOut() {
+        const { data } = await supabase.auth.getUser();
+
+        logout();
+
+        if (data.user) {
+            setUser(null);
+        }
+    }
+
+    console.log(user);
+
     return (
         <div className="flex flex-row">
             {/**Sidebar */}
@@ -10,6 +44,7 @@ export default function Home() {
                 <div>
                     <h3>AI Chats</h3>
                 </div>
+                <button onClick={signOut}>Logout</button>
             </div>
             {/**Messages */}
             <div className="h-screen overflow-hidden w-5/6 flex flex-col justify-between">
