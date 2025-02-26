@@ -1,9 +1,8 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-export const useGlobalStore = create((set) => ({
-    user: null,
-    setUser: (user) =>
-        set((state) => {
-            state.user = user;
-        }),
+const useGlobalStore = create((set) => ({
+	user: null,
+	setUser: (user) => set({ user }),
 }));
+
+export default useGlobalStore;
