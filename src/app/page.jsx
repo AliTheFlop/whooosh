@@ -3,10 +3,12 @@
 import { SearchIcon } from "lucide-react";
 import UserMessage from "@/components/UserMessage";
 import useGlobalStore from "@/store/zustand";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
 	const user = useGlobalStore((state) => state.user);
 	const setUser = useGlobalStore((state) => state.setUser);
+	const { data: session, status } = useSession();
 
 	return (
 		<div className="flex min-h-screen bg-white">
@@ -23,16 +25,20 @@ export default function Home() {
 				<div className="flex-1">{/* Add nav items here */}</div>
 
 				{/* Logout */}
-				<button
-					className="m-4 p-3.5 rounded-lg 
+				{status === "loading" ? (
+					<p>Loading</p>
+				) : (
+					<button
+						className="m-4 p-3.5 rounded-lg 
                         bg-gray-100 
                         hover:bg-gray-200 
                         text-gray-700 
                         font-medium
                         transition-all duration-200"
-				>
-					Logout
-				</button>
+					>
+						Logout
+					</button>
+				)}
 			</div>
 
 			{/* Chat Area */}
