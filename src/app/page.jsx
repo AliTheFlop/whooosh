@@ -1,53 +1,58 @@
 "use client";
 
 import { SearchIcon } from "lucide-react";
-import UserMessage from "@/components/UserMessage";
 import useGlobalStore from "@/store/zustand";
 import { useSession } from "next-auth/react";
+import Sidebar from "@/components/Sidebar";
+import Chat from "@/components/Chat";
+import { useRef } from "react";
+import { v4 } from "uuid";
+import { useEffect } from "react";
 
 export default function Home() {
-	const user = useGlobalStore((state) => state.user);
 	const setUser = useGlobalStore((state) => state.setUser);
+	const newMessage = useGlobalStore((state) => state.newMessage);
+	const isAnswering = useGlobalStore((state) => state.isAnswering);
+	const setIsAnswering = useGlobalStore((state) => state.setIsAnswering);
+	const inputRef = useRef();
+
 	const { data: session, status } = useSession();
 
+	useEffect(() => {
+		if (session) {
+			setUser(session.user);
+		}
+	}, [session, setUser]);
+
+	function handleNewMessage() {
+		const messageContent = inputRef.current.value;
+
+		if (!messageContent || isAnswering) return;
+
+		const messageData = {
+			content: messageContent,
+			id: v4(),
+		};
+
+		newMessage(messageData);
+
+		setIsAnswering(true);
+		inputRef.current.value = "";
+
+		setTimeout(() => {
+			setIsAnswering(false);
+		}, "2000");
+	}
+
 	return (
-		<div className="flex min-h-screen bg-white">
-			{/* Sidebar */}
-			<div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col">
-				{/* Logo */}
-				<div className="p-6">
-					<h3 className="text-2xl font-semibold text-gray-800">
-						Whooosh
-					</h3>
-				</div>
-
-				{/* Navigation Area */}
-				<div className="flex-1">{/* Add nav items here */}</div>
-
-				{/* Logout */}
-				{status === "loading" ? (
-					<p>Loading</p>
-				) : (
-					<button
-						className="m-4 p-3.5 rounded-lg 
-                        bg-gray-100 
-                        hover:bg-gray-200 
-                        text-gray-700 
-                        font-medium
-                        transition-all duration-200"
-					>
-						Logout
-					</button>
-				)}
-			</div>
+		<div className="flex min-h-screen max-h-screen bg-white">
+			<Sidebar />
 
 			{/* Chat Area */}
 			<div className="flex-1 flex flex-col bg-white">
 				{/* Messages */}
-				<div className="flex-1 overflow-y-auto">
-					<div className="max-w-3xl mx-auto py-8 px-4">
-						<UserMessage content="I wanna make a new golden stuff!" />
-					</div>
+				<div className="flex-1 overflow-y-auto overflow-x-hidden">
+					<Chat chatid={54} />
 				</div>
 
 				{/* Input */}
@@ -68,7 +73,14 @@ export default function Home() {
                                 focus:outline-none
                                 transition-colors"
 							placeholder="Let's get a chat going!"
+							ref={inputRef}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									handleNewMessage();
+								}
+							}}
 						/>
+						{isAnswering && <div className="spinner"></div>}
 					</div>
 				</div>
 			</div>
