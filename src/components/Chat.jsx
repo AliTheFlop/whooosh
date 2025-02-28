@@ -5,10 +5,13 @@ import useGlobalStore from "@/store/zustand";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useEffect } from "react";
 import AIResponse from "./AIResponse";
+import { v4 } from "uuid";
 
-export default function Chat({ chatid }) {
+export default function Chat() {
 	const messages = useGlobalStore((state) => state.messages);
 	const setCurrentChat = useGlobalStore((state) => state.setCurrentChat);
+	const setCurrentChatId = useGlobalStore((state) => state.setCurrentChatId);
+	const currentChatId = useGlobalStore((state) => state.currentChatId);
 
 	useEffect(() => {
 		const genAI = new GoogleGenerativeAI(
@@ -25,12 +28,17 @@ export default function Chat({ chatid }) {
 			history: [],
 		});
 
+		const generatedChatId = v4();
+
+		setCurrentChatId(generatedChatId);
 		setCurrentChat(chat);
 	}, []);
 
 	return (
 		<>
-			<h1 className="text-center w-full">{chatid}</h1>
+			<h1 className="text-center w-full">
+				{currentChatId ? currentChatId : null}
+			</h1>
 			<div className="max-w-3xl mx-auto py-8 px-4">
 				{messages.length > 0 ? (
 					messages.map((message) =>

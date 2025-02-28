@@ -6,7 +6,9 @@ export async function handleNewMessage(
 	currentChat,
 	newMessage,
 	inputRef,
-	isAnswering
+	isAnswering,
+	markdownToHtml,
+	currentChatId
 ) {
 	const messageContent = inputRef.current.value.trim();
 
@@ -27,8 +29,11 @@ export async function handleNewMessage(
 	try {
 		const result1 = await currentChat.sendMessage(messageContent);
 
+		const markdownResponse = result1.response.text();
+		const htmlResponse = await markdownToHtml(markdownResponse);
+
 		const aiResponse = {
-			content: result1.response.text(),
+			content: htmlResponse,
 			id: v4(),
 			type: "ai",
 		};
@@ -36,7 +41,7 @@ export async function handleNewMessage(
 		newMessage(aiResponse);
 
 		const saveMessageResponse = await axios.post(
-			`/api/chat/${chatid}/message`,
+			`/api/chat/${encodeURIComponent(currentChatId)}/message`,
 			{ messageData, aiResponse }
 		);
 	} catch (error) {

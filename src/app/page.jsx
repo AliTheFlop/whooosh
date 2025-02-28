@@ -11,12 +11,21 @@ import Spinner from "@/components/Spinner";
 
 import { handleNewMessage } from "@/utils/handleNewMessage";
 
+import { remark } from "remark";
+import html from "remark-html";
+
+async function markdownToHtml(markdown) {
+	const result = await remark().use(html).process(markdown);
+	return result.toString();
+}
+
 export default function Home() {
 	const setUser = useGlobalStore((state) => state.setUser);
 	const newMessage = useGlobalStore((state) => state.newMessage);
 	const isAnswering = useGlobalStore((state) => state.isAnswering);
 	const setIsAnswering = useGlobalStore((state) => state.setIsAnswering);
 	const currentChat = useGlobalStore((state) => state.currentChat);
+	const currentChatId = useGlobalStore((state) => state.currentChatId);
 	const inputRef = useRef();
 
 	const { data: session, status } = useSession();
@@ -35,7 +44,7 @@ export default function Home() {
 			<div className="flex-1 flex flex-col bg-white">
 				{/* Messages */}
 				<div className="flex-1 overflow-y-auto overflow-x-hidden">
-					<Chat chatid={54} />
+					<Chat />
 				</div>
 
 				{/* Input */}
@@ -67,7 +76,9 @@ export default function Home() {
 										currentChat,
 										newMessage,
 										inputRef,
-										isAnswering
+										isAnswering,
+										markdownToHtml,
+										currentChatId
 									);
 								}
 							}}

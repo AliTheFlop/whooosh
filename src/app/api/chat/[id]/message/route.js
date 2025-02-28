@@ -7,7 +7,7 @@ const client = new MongoClient(uri);
 export async function POST(request, { params }) {
 	try {
 		const { messageData: userMessage, aiResponse } = await request.json();
-		const chatId = params.id;
+		const chatId = await params.id;
 
 		const db = client.db("Whooosh");
 		const messages = db.collection("messages");
@@ -19,7 +19,7 @@ export async function POST(request, { params }) {
 			timestamp: new Date(),
 		};
 
-		const result = await messages.insertOne(newMessage);
+		await messages.insertOne(newMessage);
 		return NextResponse.json({ success: true }, { status: 201 });
 	} catch (err) {
 		console.log(err);
