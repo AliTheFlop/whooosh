@@ -24,7 +24,7 @@ export async function POST(request) {
 
 		if (existingUser) {
 			return NextResponse.json(
-				{ error: "User already exists!" },
+				{ error: "Email is already being used." },
 				{ status: 400 }
 			);
 		}
