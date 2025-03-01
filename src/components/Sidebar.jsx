@@ -1,4 +1,5 @@
 import { useSession, signOut } from "next-auth/react";
+import ChatsSidebar from "./ChatsSidebar";
 
 export default function Sidebar() {
 	const { data: session, status } = useSession();
@@ -15,7 +16,13 @@ export default function Sidebar() {
 				</div>
 
 				{/* Navigation Area */}
-				<div className="flex-1">{/* Add nav items here */}</div>
+				<div className="flex-1">
+					{session ? (
+						<ChatsSidebar userId={session.user.id} />
+					) : (
+						<p>Chats loading</p>
+					)}
+				</div>
 
 				{/* Logout */}
 				{session ? (

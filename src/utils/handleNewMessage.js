@@ -14,13 +14,14 @@ export async function handleNewMessage(
 
 	if (!messageContent || isAnswering) return;
 
-	const messageData = {
+	const userMessage = {
 		content: messageContent,
 		id: v4(),
+		chatId: currentChatId,
 		type: "user",
 	};
 
-	newMessage(messageData);
+	newMessage(userMessage);
 
 	setIsAnswering(true);
 	inputRef.current.value = "";
@@ -35,6 +36,7 @@ export async function handleNewMessage(
 		const aiResponse = {
 			content: htmlResponse,
 			id: v4(),
+			chatId: currentChatId,
 			type: "ai",
 		};
 
@@ -42,7 +44,7 @@ export async function handleNewMessage(
 
 		const saveMessageResponse = await axios.post(
 			`/api/chat/${encodeURIComponent(currentChatId)}/message`,
-			{ messageData, aiResponse }
+			{ userMessage, aiResponse }
 		);
 	} catch (error) {
 		console.log(error);

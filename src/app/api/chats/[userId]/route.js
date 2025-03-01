@@ -1,20 +1,21 @@
 import { MongoClient } from "mongodb";
 import { NextResponse } from "next/server";
+import { ObjectId } from "mongodb";
 
 const uri = process.env.NEXT_PUBLIC_MONGODB_URI;
 const client = new MongoClient(uri);
 
-export async function POST(request, { params }) {
+export async function GET(request, { params }) {
 	try {
-		const { userMessage, aiResponse } = await request.json();
 		const param = await params;
-		const chatId = param.id;
+		const userId = param.userId;
 
 		const db = client.db("Whooosh");
-		const messages = db.collection("messages");
+		const chats = db.collection("chat");
 
-		await messages.insertMany([userMessage, aiResponse]);
-		return NextResponse.json({ success: true }, { status: 201 });
+		const getChats = await chats.find({ userId: userId }).toArray();
+
+		return NextResponse.json({ chats: getChats }, { status: 201 });
 	} catch (err) {
 		console.log(err);
 		return NextResponse.json({ error: err }, { status: 500 });

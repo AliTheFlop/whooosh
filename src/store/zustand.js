@@ -11,6 +11,7 @@ const useGlobalStore = create((set) => ({
 	setUser: (user) => set({ user }),
 	newMessage: (message) =>
 		set((state) => ({ messages: [...state.messages, message] })),
+	setMessages: (messages) => set({ messages: messages }),
 	setCurrentChat: (chat) => set({ currentChat: chat }),
 	setCurrentChatId: (chatId) => set({ currentChatId: chatId }),
 }));
