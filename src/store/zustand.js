@@ -5,6 +5,7 @@ import GetChat from "@/utils/GetChat";
 import SetupChat from "@/utils/SetupChat";
 import { remark } from "remark";
 import html from "remark-html";
+import DOMPurify from "dompurify";
 
 async function markdownToHtml(markdown) {
 	const result = await remark().use(html).process(markdown);
@@ -115,9 +116,10 @@ const useGlobalStore = create((set, get) => ({
 
 			const markdownResponse = result.response.text();
 			const htmlResponse = await markdownToHtml(markdownResponse);
+			const sanitizedHtml = DOMPurify.sanitize(htmlResponse);
 
 			const aiResponse = {
-				content: htmlResponse,
+				content: sanitizedHtml,
 				id: v4(),
 				chatId: localChatId,
 				type: "ai",

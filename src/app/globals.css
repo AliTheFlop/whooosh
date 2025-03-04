@@ -273,3 +273,8 @@ pre[class*="language-"] {
 .markdown-body li.task-list-item input[type="checkbox"] {
 	margin-right: 0.5em;
 }
+
+.markdown-body hr {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}

@@ -16,6 +16,8 @@ export default function Chat({ chatId, userId }) {
 		}
 	}, [chatId, userId]);
 
+	console.log(messages);
+
 	return (
 		<>
 			<h1 className="text-center w-full">
