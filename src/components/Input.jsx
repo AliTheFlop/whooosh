@@ -3,25 +3,26 @@
 import useGlobalStore from "@/store/zustand";
 import Spinner from "@/components/Spinner";
 import { SearchIcon } from "lucide-react";
-import { remark } from "remark";
-import html from "remark-html";
 
 import { handleNewMessage } from "@/utils/handleNewMessage";
 
 import { useRef } from "react";
 
-async function markdownToHtml(markdown) {
-	const result = await remark().use(html).process(markdown);
-	return result.toString();
-}
-
 export default function Input() {
-	const newMessage = useGlobalStore((state) => state.newMessage);
 	const isAnswering = useGlobalStore((state) => state.isAnswering);
-	const setIsAnswering = useGlobalStore((state) => state.setIsAnswering);
-	const currentChat = useGlobalStore((state) => state.currentChat);
-	const currentChatId = useGlobalStore((state) => state.currentChatId);
+	const handleMessage = useGlobalStore((state) => state.handleMessage);
+
 	const inputRef = useRef();
+
+	function sendMessage() {
+		const messageContent = inputRef.current.value.trim();
+
+		if (messageContent) {
+			handleMessage(messageContent);
+			inputRef.current.value = "";
+		}
+	}
+
 	return (
 		<div className="border-t border-gray-100 p-4">
 			<div className="max-w-3xl mx-auto relative flex flex-row items-center">
@@ -46,15 +47,7 @@ export default function Input() {
 					onKeyDown={(e) => {
 						if (e.key === "Enter" && !e.shiftKey) {
 							e.preventDefault();
-							handleNewMessage(
-								setIsAnswering,
-								currentChat,
-								newMessage,
-								inputRef,
-								isAnswering,
-								markdownToHtml,
-								currentChatId
-							);
+							sendMessage();
 						}
 					}}
 					style={{

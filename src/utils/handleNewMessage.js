@@ -1,6 +1,24 @@
 const axios = require("axios");
 const { v4 } = require("uuid");
 
+// Handle the first message in a chat
+
+export async function handleFirstMessage(messageContent) {
+	if (!isInitialized) {
+		if (chatId) {
+			const { chat } = await GetChat(chatId, setMessages);
+			setCurrentChat(chat);
+		} else {
+			const { generatedChatId, chat } = await SetupChat(userId);
+			setCurrentChat(chat);
+			setCurrentChatId(generatedChatId);
+		}
+		setIsInitialized(true);
+	}
+}
+
+//Handle all new messages
+
 export async function handleNewMessage(
 	setIsAnswering,
 	currentChat,
@@ -42,7 +60,7 @@ export async function handleNewMessage(
 
 		newMessage(aiResponse);
 
-		const saveMessageResponse = await axios.post(
+		await axios.post(
 			`/api/chat/${encodeURIComponent(currentChatId)}/message`,
 			{ userMessage, aiResponse }
 		);

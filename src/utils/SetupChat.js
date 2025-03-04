@@ -1,24 +1,23 @@
-"use client";
+const axios = require("axios");
+const { v4 } = require("uuid");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-import UserMessage from "./UserMessage";
-import useGlobalStore from "@/store/zustand";
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { useEffect } from "react";
-import AIResponse from "./AIResponse";
-import { v4 } from "uuid";
+export default async function SetupChat(userId) {
+	// If there's no chatId we setup the chat & add it to the DB
+	try {
+		const generatedChatId = v4();
 
-export default function NewChat() {
-	const messages = useGlobalStore((state) => state.messages);
-	const setCurrentChat = useGlobalStore((state) => state.setCurrentChat);
-	const setCurrentChatId = useGlobalStore((state) => state.setCurrentChatId);
-	const currentChatId = useGlobalStore((state) => state.currentChatId);
+		const result = await axios.post(`/api/chat/${generatedChatId}`, {
+			userId,
+		});
 
-	async function newChatSetup() {
 		const genAI = new GoogleGenerativeAI(
 			process.env.NEXT_PUBLIC_GOOGLE_GENERATIVE_API_KEY
 		);
 
-		const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+		const model = genAI.getGenerativeModel({
+			model: "gemini-2.0-flash",
+		});
 
 		const chat = model.startChat({
 			system_instruction:
@@ -26,38 +25,8 @@ export default function NewChat() {
 			history: [],
 		});
 
-		const generatedChatId = v4();
-
-		setCurrentChatId(generatedChatId);
-		setCurrentChat(chat);
+		return { generatedChatId, chat };
+	} catch (error) {
+		return { error: true, error_message: error };
 	}
-
-	return (
-		<>
-			<h1 className="text-center w-full">
-				{currentChatId ? currentChatId : null}
-			</h1>
-			<div className="max-w-3xl mx-auto py-8 px-4">
-				{messages.length > 0 ? (
-					messages.map((message) =>
-						message.type === "user" ? (
-							<UserMessage
-								content={message.content}
-								key={message.id}
-							/>
-						) : (
-							<AIResponse
-								content={message.content}
-								key={message.id}
-							/>
-						)
-					)
-				) : (
-					<p className="w-full text-center">
-						Send a message to set up a chat
-					</p>
-				)}
-			</div>
-		</>
-	);
 }

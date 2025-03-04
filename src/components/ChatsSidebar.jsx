@@ -10,7 +10,6 @@ export default function ChatsSidebar(userId) {
 		setCurrentChatId(id);
 	}
 
-	console.log("UserID: ", userId);
 	useEffect(() => {
 		async function getUserChats() {
 			try {

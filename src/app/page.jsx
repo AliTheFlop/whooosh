@@ -3,7 +3,6 @@
 import useGlobalStore from "@/store/zustand";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/Sidebar";
-import NewChat from "@/components/NewChat";
 import { useEffect } from "react";
 import Chat from "@/components/Chat";
 import Input from "@/components/Input";
@@ -27,10 +26,10 @@ export default function Home() {
 			<div className="flex-1 flex flex-col bg-white">
 				{/* Messages */}
 				<div className="flex-1 overflow-y-auto overflow-x-hidden">
-					{currentChatId ? (
-						<Chat chatId={currentChatId} />
+					{session ? (
+						<Chat chatId={currentChatId} userId={session.user.id} />
 					) : (
-						<NewChat />
+						<p>Loading...</p>
 					)}
 				</div>
 
