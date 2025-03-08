@@ -26,7 +26,7 @@ export default function Chat({ chatId, userId }) {
 			<div className="max-w-3xl mx-auto py-8 px-4">
 				{messages.length > 0 ? (
 					messages.map((message) =>
-						message.type === "user" ? (
+						message.role === "user" ? (
 							<UserMessage
 								content={message.content}
 								key={message.id}

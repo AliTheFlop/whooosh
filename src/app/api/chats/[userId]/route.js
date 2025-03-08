@@ -1,6 +1,5 @@
 import { MongoClient } from "mongodb";
 import { NextResponse } from "next/server";
-import { ObjectId } from "mongodb";
 
 const uri = process.env.NEXT_PUBLIC_MONGODB_URI;
 const client = new MongoClient(uri);
@@ -13,7 +12,10 @@ export async function GET(request, { params }) {
 		const db = client.db("Whooosh");
 		const chats = db.collection("chat");
 
-		const getChats = await chats.find({ userId: userId }).toArray();
+		const getChats = await chats
+			.find({ userId: userId })
+			.sort({ timestamp: -1 })
+			.toArray();
 
 		return NextResponse.json({ chats: getChats }, { status: 201 });
 	} catch (err) {

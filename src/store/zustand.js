@@ -34,7 +34,7 @@ const useGlobalStore = create((set, get) => ({
 	// Functions
 
 	// Initialize a new chat if there is none
-	initializeChat: async (chatId, userId) => {
+	initializeChat: async (chatId, userId, chatTitle) => {
 		const state = get();
 
 		let chat;
@@ -51,7 +51,9 @@ const useGlobalStore = create((set, get) => ({
 				isInitialized: true,
 			});
 		} else {
-			const result = await SetupChat(userId);
+			const result = await SetupChat(userId, chatTitle);
+
+			console.log(result);
 
 			chat = result.chat;
 			generatedChatId = result.generatedChatId;
@@ -78,10 +80,13 @@ const useGlobalStore = create((set, get) => ({
 		// If state.currentChatId is NULL (so there's no active chat)
 		// Then it'll make a new one and return the ID and Chat object
 		// For local use
+
+		console.log(messageContent.split(" ").slice(0, 8).join(" "));
 		if (!state.isInitialized) {
 			const { chat, generatedChatId } = await state.initializeChat(
 				state.currentChatId,
-				state.user?.id
+				state.user?.id,
+				messageContent.split(" ").slice(0, 8).join(" ")
 			);
 
 			// Set chat and chatId for use
@@ -94,11 +99,11 @@ const useGlobalStore = create((set, get) => ({
 		}
 
 		const userMessage = {
+			role: "user",
 			content: messageContent,
 			userId: state.user.id,
 			id: v4(),
 			chatId: localChatId,
-			type: "user",
 		};
 
 		state.newMessage(userMessage);
@@ -122,7 +127,7 @@ const useGlobalStore = create((set, get) => ({
 				content: sanitizedHtml,
 				id: v4(),
 				chatId: localChatId,
-				type: "ai",
+				role: "model",
 			};
 
 			state.newMessage(aiResponse);
@@ -139,6 +144,16 @@ const useGlobalStore = create((set, get) => ({
 		}
 
 		set({ isAnswering: false });
+	},
+	// Setup new chat
+	switchChat: (newChatId) => {
+		const state = get();
+		if (!newChatId) return;
+
+		state.messages = [];
+		state.isInitialized = false;
+
+		state.initializeChat(newChatId);
 	},
 }));
 

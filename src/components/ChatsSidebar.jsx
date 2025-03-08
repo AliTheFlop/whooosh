@@ -4,10 +4,15 @@ import { useEffect, useState } from "react";
 
 export default function ChatsSidebar(userId) {
 	const [chats, setChats] = useState([]);
-	const setCurrentChatId = useGlobalStore((state) => state.setCurrentChatId);
+	const switchChat = useGlobalStore((state) => state.switchChat);
 
 	function handleChatClick(id) {
-		setCurrentChatId(id);
+		// Reset messages
+		// Set the new chatId
+		// Reload the messages
+		// Scroll to the bottom
+		// Maybe add a loading effect
+		switchChat(id);
 	}
 
 	useEffect(() => {
@@ -27,11 +32,17 @@ export default function ChatsSidebar(userId) {
 	return (
 		<div className="p-4 flex flex-col gap-2">
 			{chats.length > 0 ? (
-				chats.map((chat) => (
-					<div className="w-full focus:shadow-md" key={chat._id}>
-						{chat.chatName}
-					</div>
-				))
+				chats.map((chat) =>
+					chat.chatTitle ? (
+						<button
+							className="w-full text-start px-2 py-2 my-1 text-clip overflow-hidden whitespace-nowrap text-base font-medium hover:ring-gray-500 hover:ring-1 "
+							key={chat._id}
+							onClick={() => handleChatClick(chat._id)}
+						>
+							{chat.chatTitle}
+						</button>
+					) : null
+				)
 			) : (
 				<p>No chats yet!</p>
 			)}

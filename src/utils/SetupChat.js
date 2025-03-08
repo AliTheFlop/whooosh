@@ -2,14 +2,15 @@ const axios = require("axios");
 const { v4 } = require("uuid");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-export default async function SetupChat(userId) {
+export default async function SetupChat(userId, chatTitle) {
 	// If there's no chatId we setup the chat & add it to the DB
 	try {
-		const generatedChatId = v4();
-
-		const result = await axios.post(`/api/chat/${generatedChatId}`, {
+		const result = await axios.post(`/api/chat`, {
 			userId,
+			chatTitle,
 		});
+
+		const generatedChatId = result.data.generatedChatId;
 
 		const genAI = new GoogleGenerativeAI(
 			process.env.NEXT_PUBLIC_GOOGLE_GENERATIVE_API_KEY
