@@ -4,8 +4,6 @@ import useGlobalStore from "@/store/zustand";
 import Spinner from "@/components/Spinner";
 import { SearchIcon } from "lucide-react";
 
-import { handleNewMessage } from "@/utils/handleNewMessage";
-
 import { useRef } from "react";
 
 export default function Input() {
@@ -60,7 +58,7 @@ export default function Input() {
 				) : (
 					<button
 						className="ml-4 p-1 rounded-full bg-blue-500 hover:bg-blue-600 text-white shadow-md transition-all duration-200 flex items-center justify-center"
-						onClick={handleNewMessage}
+						onClick={sendMessage}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

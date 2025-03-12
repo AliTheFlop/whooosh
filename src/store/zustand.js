@@ -6,6 +6,7 @@ import SetupChat from "@/utils/SetupChat";
 import { remark } from "remark";
 import html from "remark-html";
 import DOMPurify from "dompurify";
+import { sendAnthropicChat } from "@/utils/GetChat";
 
 async function markdownToHtml(markdown) {
 	const result = await remark().use(html).process(markdown);

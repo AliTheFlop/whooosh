@@ -2,6 +2,9 @@ const axios = require("axios");
 const { v4 } = require("uuid");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
+// We can use model.generateContent instead of making a chat
+// https://ai.google.dev/gemini-api/docs/text-generation?lang=node
+
 export default async function SetupChat(userId, chatTitle) {
 	// If there's no chatId we setup the chat & add it to the DB
 	try {
