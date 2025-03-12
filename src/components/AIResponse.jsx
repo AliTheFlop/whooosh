@@ -31,9 +31,13 @@ export default function AIResponse({ content }) {
 		Prism.highlightAll();
 	});
 	return (
-		<div
-			className="markdown-body"
-			dangerouslySetInnerHTML={{ __html: content }}
-		/>
+		<div className="my-4">
+			<div className="rounded-2xl bg-white px-4 py-3">
+				<div
+					className="markdown-body"
+					dangerouslySetInnerHTML={{ __html: content }}
+				/>
+			</div>
+		</div>
 	);
 }

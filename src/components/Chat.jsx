@@ -2,7 +2,7 @@
 
 import UserMessage from "./UserMessage";
 import useGlobalStore from "@/store/zustand";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import AIResponse from "./AIResponse";
 
 export default function Chat({ chatId, userId }) {
@@ -10,18 +10,39 @@ export default function Chat({ chatId, userId }) {
 	const initializeChat = useGlobalStore((state) => state.initializeChat);
 	const currentChatTitle = useGlobalStore((state) => state.currentChatTitle);
 
+	const waypointRef = useRef(null);
+	const containerRef = useRef(null);
+
+	function scrollToBottom() {
+		if (waypointRef.current) {
+			waypointRef.current.scrollIntoView({
+				behavior: "smooth",
+				block: "end",
+			});
+		}
+	}
+
 	useEffect(() => {
 		if (chatId) {
 			initializeChat(chatId, userId);
 		}
 	}, [chatId, userId]);
 
+	useEffect(() => {
+		setTimeout(scrollToBottom, 100);
+	}, [messages]);
+
 	return (
 		<>
-			<h1 className="text-center w-full">
-				{currentChatTitle ? currentChatTitle : null}
-			</h1>
-			<div className="max-w-3xl mx-auto py-8 px-4">
+			{currentChatTitle ? (
+				<div className="w-full border-b h-12 flex items-center justify-start bg-white">
+					<h1 className="ml-4 font-semibold text-regular">
+						{currentChatTitle ? currentChatTitle : null}
+					</h1>
+				</div>
+			) : null}
+
+			<div className="max-w-3xl mx-auto py-8 px-4" ref={containerRef}>
 				{messages.length > 0 ? (
 					messages.map((message) =>
 						message.role === "user" ? (
@@ -39,6 +60,7 @@ export default function Chat({ chatId, userId }) {
 				) : (
 					<p className="w-full text-center">No messages yet!</p>
 				)}
+				<div id="waypointContainer" ref={waypointRef}></div>
 			</div>
 		</>
 	);

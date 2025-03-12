@@ -3,21 +3,15 @@
 import useGlobalStore from "@/store/zustand";
 import Spinner from "@/components/Spinner";
 import { SearchIcon } from "lucide-react";
-
-import { useRef } from "react";
+import TipTap from "./TipTap";
 
 export default function Input() {
 	const isAnswering = useGlobalStore((state) => state.isAnswering);
 	const handleMessage = useGlobalStore((state) => state.handleMessage);
 
-	const inputRef = useRef();
-
-	function sendMessage() {
-		const messageContent = inputRef.current.value.trim();
-
+	function sendMessage(messageContent) {
 		if (messageContent) {
 			handleMessage(messageContent);
-			inputRef.current.value = "";
 		}
 	}
 
@@ -27,32 +21,8 @@ export default function Input() {
 				<span className="absolute left-4 top-1/2 -translate-y-1/2">
 					<SearchIcon size={20} className="text-gray-400" />
 				</span>
-				<textarea
-					className="mainTextInput w-5/6 min-h-12 h-auto max-x-36 pl-12 rounded-lg
-							bg-gray-50
-							border border-gray-200
-							text-gray-800
-							placeholder-gray-400
-							focus:border-blue-500
-							focus:ring-1 focus:ring-blue-500
-							focus:outline-none
-							transition-colors
-							resize-vertical overflow-hidden
-							leading-tight py-3"
-					placeholder="Let's get a chat going!"
-					ref={inputRef}
-					rows="1"
-					onKeyDown={(e) => {
-						if (e.key === "Enter" && !e.shiftKey) {
-							e.preventDefault();
-							sendMessage();
-						}
-					}}
-					style={{
-						minHeight: "48px",
-						maxHeight: "120px",
-					}}
-				/>
+
+				<TipTap sendMessage={sendMessage} />
 				{isAnswering ? (
 					<Spinner />
 				) : (
@@ -79,4 +49,41 @@ export default function Input() {
 			</div>
 		</div>
 	);
+}
+
+{
+	/* <textarea
+					className="mainTextInput w-5/6 min-h-20 h-auto max-x-36 pl-12 rounded-lg
+							bg-gray-50
+							border border-gray-200
+							text-gray-800
+							placeholder-gray-400
+							focus:border-blue-500
+							focus:ring-1 focus:ring-blue-500
+							focus:outline-none
+							transition-colors
+							resize-vertical overflow-hidden
+							leading-tight py-3"
+					placeholder="Let's get a chat going!"
+					ref={inputRef}
+					rows="1"
+					onKeyDown={(e) => {
+						if (e.key === "Enter" && !e.shiftKey) {
+							e.preventDefault();
+							sendMessage();
+						} else if (e.key === "Enter" && e.shiftKey) {
+							setTextAreaHeight((prevHeight) => {
+								const newHeight = Math.min(
+									prevHeight + 16,
+									120
+								);
+								return newHeight;
+							});
+						}
+					}}
+					style={{
+						minHeight: `${textAreaHeight}px`,
+						maxHeight: "120px",
+					}}
+				/> */
 }

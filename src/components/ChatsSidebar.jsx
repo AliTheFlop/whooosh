@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 export default function ChatsSidebar(userId) {
 	const [chats, setChats] = useState([]);
 	const switchChat = useGlobalStore((state) => state.switchChat);
+	const currentChatId = useGlobalStore((state) => state.currentChatId);
 
 	function handleChatClick(id) {
 		// Reset messages
@@ -12,6 +13,9 @@ export default function ChatsSidebar(userId) {
 		// Reload the messages
 		// Scroll to the bottom
 		// Maybe add a loading effect
+		if (currentChatId === id) {
+			return;
+		}
 		switchChat(id);
 	}
 

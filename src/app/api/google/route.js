@@ -47,9 +47,6 @@ export async function POST(request) {
 
 		const response = await useModel.generateContent({
 			contents: [messagesWithUser],
-			generationConfig: {
-				maxOutputTokens: 1000,
-			},
 		});
 
 		const aiResponse = response.response.text();
