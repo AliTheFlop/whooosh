@@ -2,13 +2,13 @@
 
 import UserMessage from "./UserMessage";
 import useGlobalStore from "@/store/zustand";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AIResponse from "./AIResponse";
 
 export default function Chat({ chatId, userId }) {
 	const messages = useGlobalStore((state) => state.messages);
-	const currentChatId = useGlobalStore((state) => state.currentChatId);
 	const initializeChat = useGlobalStore((state) => state.initializeChat);
+	const currentChatTitle = useGlobalStore((state) => state.currentChatTitle);
 
 	useEffect(() => {
 		if (chatId) {
@@ -16,12 +16,10 @@ export default function Chat({ chatId, userId }) {
 		}
 	}, [chatId, userId]);
 
-	console.log(messages);
-
 	return (
 		<>
 			<h1 className="text-center w-full">
-				{currentChatId ? currentChatId : null}
+				{currentChatTitle ? currentChatTitle : null}
 			</h1>
 			<div className="max-w-3xl mx-auto py-8 px-4">
 				{messages.length > 0 ? (

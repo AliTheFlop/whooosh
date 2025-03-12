@@ -136,7 +136,7 @@ export default function RegisterPage() {
 					<button
 						type="submit"
 						className="w-full h-12 flex justify-center items-center
-				bg-blue-500 hover:bg-blue-600
+				bg-blue-800 hover:bg-blue-600
 				text-white font-medium
 				rounded-lg
 				transition-colors duration-200 ease-in-out

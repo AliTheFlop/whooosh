@@ -1,22 +1,30 @@
 import { useSession, signOut } from "next-auth/react";
 import ChatsSidebar from "./ChatsSidebar";
+import useGlobalStore from "@/store/zustand";
 
 export default function Sidebar() {
 	const { data: session, status } = useSession();
+	const newChat = useGlobalStore((state) => state.newChat);
 
 	return (
 		<>
 			{/* Sidebar */}
-			<div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col">
+			<div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col max-h-full">
 				{/* Logo */}
-				<div className="p-6">
-					<h3 className="text-2xl font-semibold text-gray-800">
+				<div className="p-6 flex flex-row items-center justify-between">
+					<h3 className="text-2xl font-bold text-stone-800 tracking-tight">
 						Whooosh
 					</h3>
+					<button
+						className="px-4 py-2 bg-blue-700 text-white font-bold rounded-full"
+						onClick={() => newChat()}
+					>
+						New Chat
+					</button>
 				</div>
 
 				{/* Navigation Area */}
-				<div className="flex-1">
+				<div className="flex-grow overflow-y-auto">
 					{session ? (
 						<ChatsSidebar userId={session.user.id} />
 					) : (
@@ -29,7 +37,7 @@ export default function Sidebar() {
 					status === "loading" ? (
 						<p className="w-full text-center">Loading</p>
 					) : (
-						<div className="px-4 py-4 w-full border-t">
+						<div className="px-4 py-4 w-full border-t flex flex-col">
 							<div className="pb-2">
 								<p className="font-bold text-lg capitalize">
 									{session.user.name}
@@ -38,13 +46,7 @@ export default function Sidebar() {
 							</div>
 
 							<button
-								className="p-3.5 rounded-lg 
-                    bg-gray-100 
-                    hover:bg-gray-200 
-                    text-gray-700 
-                    font-medium 
-                    transition-all duration-200
-                    w-full"
+								className="bg-blue-800 hover:bg-blue-600 text-white font-medium transition-all duration-200 px-4 py-2 rounded-lg mt-3"
 								onClick={() => signOut()}
 							>
 								Logout

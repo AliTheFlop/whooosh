@@ -57,7 +57,7 @@ export default function Input() {
 					<Spinner />
 				) : (
 					<button
-						className="ml-4 p-1 rounded-full bg-blue-500 hover:bg-blue-600 text-white shadow-md transition-all duration-200 flex items-center justify-center"
+						className="ml-4 p-1 rounded-full bg-blue-800 hover:bg-blue-600 text-white shadow-md transition-all duration-200 flex items-center justify-center"
 						onClick={sendMessage}
 					>
 						<svg

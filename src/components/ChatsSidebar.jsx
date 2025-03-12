@@ -30,7 +30,7 @@ export default function ChatsSidebar(userId) {
 	}, []);
 
 	return (
-		<div className="p-4 flex flex-col gap-2">
+		<div className="p-4 flex flex-col gap-2 ">
 			{chats.length > 0 ? (
 				chats.map((chat) =>
 					chat.chatTitle ? (

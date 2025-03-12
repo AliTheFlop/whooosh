@@ -13,8 +13,6 @@ export async function GET(request, { params }) {
 		const db = client.db("Whooosh");
 		const chats = db.collection("chat");
 
-		console.log(chatId);
-
 		const chatExists = await chats.findOne({
 			_id: ObjectId.createFromHexString(chatId),
 		});
@@ -26,7 +24,7 @@ export async function GET(request, { params }) {
 				.toArray();
 
 			return NextResponse.json(
-				{ messages: getMessages },
+				{ messages: getMessages, chatTitle: chatExists.chatTitle },
 				{ status: 201 }
 			);
 		} else {

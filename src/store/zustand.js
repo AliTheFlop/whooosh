@@ -7,6 +7,7 @@ import { remark } from "remark";
 import html from "remark-html";
 import DOMPurify from "dompurify";
 import { sendAnthropicChat } from "@/utils/GetChat";
+import { sendGoogleChat } from "@/utils/SendMessageHelpers";
 
 async function markdownToHtml(markdown) {
 	const result = await remark().use(html).process(markdown);
@@ -19,9 +20,10 @@ const useGlobalStore = create((set, get) => ({
 	messages: [],
 	inputRef: null,
 	isAnswering: false,
-	currentChat: null,
+	activeModel: "gemini-2.0-flash",
 	currentChatId: null,
 	isInitialized: false,
+	currentChatTitle: "",
 
 	// Setters
 	setIsAnswering: (bool) => set({ isAnswering: bool }),
@@ -38,41 +40,39 @@ const useGlobalStore = create((set, get) => ({
 	initializeChat: async (chatId, userId, chatTitle) => {
 		const state = get();
 
-		let chat;
-		let generatedChatId;
-
 		if (state.isInitialized) return;
 
+		// If chatId given, get messages
 		if (chatId) {
-			const { chat } = await GetChat(chatId, state.setMessages);
+			const result = await GetChat(chatId, state.setMessages);
+
+			if (!result.success) {
+				console.error(result.message);
+			}
 
 			set({
-				currentChat: chat,
 				currentChatId: chatId,
 				isInitialized: true,
+				currentChatTitle: result.chatTitle,
 			});
 		} else {
 			const result = await SetupChat(userId, chatTitle);
 
-			console.log(result);
-
-			chat = result.chat;
-			generatedChatId = result.generatedChatId;
+			const generatedChatId = result;
 
 			set({
-				currentChat: chat,
-				currentChatId: result.generatedChatId,
+				currentChatId: generatedChatId,
 				isInitialized: true,
+				currentChatTitle: chatTitle,
 			});
-		}
 
-		return { chat, generatedChatId };
+			return generatedChatId;
+		}
 	},
 
 	// Handle any message & initialize a chat if doesn't exist
 	handleMessage: async (messageContent) => {
 		const state = get();
-		let localChat;
 		let localChatId;
 
 		if (!messageContent || state.isAnswering) return;
@@ -84,14 +84,13 @@ const useGlobalStore = create((set, get) => ({
 
 		console.log(messageContent.split(" ").slice(0, 8).join(" "));
 		if (!state.isInitialized) {
-			const { chat, generatedChatId } = await state.initializeChat(
+			const generatedChatId = await state.initializeChat(
 				state.currentChatId,
 				state.user?.id,
 				messageContent.split(" ").slice(0, 8).join(" ")
 			);
 
-			// Set chat and chatId for use
-			localChat = chat;
+			// Set chatId for use
 			localChatId = generatedChatId;
 		}
 
@@ -113,16 +112,23 @@ const useGlobalStore = create((set, get) => ({
 
 		try {
 			let result;
+			if (state.activeModel === "gemini-2.0-flash") {
+				console.log(state.messages);
+				result = await sendGoogleChat(
+					state.messages,
+					state.activeModel,
+					messageContent
+				);
 
-			if (localChat) {
-				result = await localChat.sendMessage(messageContent);
-			} else {
-				result = await state.currentChat.sendMessage(messageContent);
+				console.log(result);
 			}
 
-			const markdownResponse = result.response.text();
+			const markdownResponse = result.data.message;
+			console.log(markdownResponse);
 			const htmlResponse = await markdownToHtml(markdownResponse);
+			console.log(htmlResponse);
 			const sanitizedHtml = DOMPurify.sanitize(htmlResponse);
+			console.log(sanitizedHtml);
 
 			const aiResponse = {
 				content: sanitizedHtml,
@@ -146,7 +152,7 @@ const useGlobalStore = create((set, get) => ({
 
 		set({ isAnswering: false });
 	},
-	// Setup new chat
+	// Switch to another, older chat
 	switchChat: (newChatId) => {
 		const state = get();
 		if (!newChatId) return;
@@ -155,6 +161,15 @@ const useGlobalStore = create((set, get) => ({
 		state.isInitialized = false;
 
 		state.initializeChat(newChatId);
+	},
+	// Setup new chat
+	newChat: () => {
+		set({
+			messages: [],
+			currentChatId: null,
+			isInitialized: false,
+			currentChatTitle: "",
+		});
 	},
 }));
 
