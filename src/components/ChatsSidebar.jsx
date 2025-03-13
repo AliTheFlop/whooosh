@@ -1,22 +1,31 @@
 import useGlobalStore from "@/store/zustand";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import ChatButton from "./ChatButton";
 
 export default function ChatsSidebar(userId) {
 	const [chats, setChats] = useState([]);
+	const refreshChat = useGlobalStore((state) => state.refreshChat);
+	const setRefreshChat = useGlobalStore((state) => state.setRefreshChat);
+	const newChat = useGlobalStore((state) => state.newChat);
 	const switchChat = useGlobalStore((state) => state.switchChat);
 	const currentChatId = useGlobalStore((state) => state.currentChatId);
 
 	function handleChatClick(id) {
-		// Reset messages
-		// Set the new chatId
-		// Reload the messages
-		// Scroll to the bottom
-		// Maybe add a loading effect
 		if (currentChatId === id) {
 			return;
 		}
 		switchChat(id);
+	}
+
+	async function handleChatDelete(id) {
+		try {
+			const result = await axios.delete(`/api/chat/${id}`);
+			setRefreshChat();
+			newChat();
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	useEffect(() => {
@@ -31,20 +40,19 @@ export default function ChatsSidebar(userId) {
 		}
 
 		getUserChats();
-	}, []);
+	}, [refreshChat]);
 
 	return (
 		<div className="p-4 flex flex-col gap-2 ">
 			{chats.length > 0 ? (
 				chats.map((chat) =>
 					chat.chatTitle ? (
-						<button
-							className="w-full text-start px-2 py-2 my-1 text-clip overflow-hidden whitespace-nowrap text-base font-medium hover:ring-gray-500 hover:ring-1 "
+						<ChatButton
+							chat={chat}
+							handleChatClick={handleChatClick}
+							handleChatDelete={handleChatDelete}
 							key={chat._id}
-							onClick={() => handleChatClick(chat._id)}
-						>
-							{chat.chatTitle}
-						</button>
+						/>
 					) : null
 				)
 			) : (

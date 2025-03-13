@@ -34,7 +34,37 @@ export async function GET(request, { params }) {
 			);
 		}
 	} catch (err) {
-		console.log(err);
 		return NextResponse.json({ error: err }, { status: 500 });
+	}
+}
+
+export async function DELETE(request, { params }) {
+	try {
+		const param = await params;
+		const chatId = param.id;
+
+		const db = client.db("Whooosh");
+		const chats = db.collection("chat");
+
+		const result = await chats.deleteOne({
+			_id: ObjectId.createFromHexString(chatId),
+		});
+
+		if (result.deletedCount === 1) {
+			return NextResponse.json(
+				{ success: true, message: "Chat deleted successfully." },
+				{ status: 200 }
+			);
+		} else {
+			return NextResponse.json(
+				{ success: false, message: "Chat not found." },
+				{ status: 404 }
+			);
+		}
+	} catch (err) {
+		return NextResponse.json(
+			{ error: true, message: err },
+			{ status: 500 }
+		);
 	}
 }

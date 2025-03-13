@@ -20,6 +20,7 @@ function TipTap({ sendMessage }) {
 		],
 		content: "",
 		autofocus: true,
+		immediatelyRender: false,
 	});
 
 	const handleKeyDown = (e) => {
@@ -36,7 +37,6 @@ function TipTap({ sendMessage }) {
 		}
 	};
 
-	// Focus editor when it's loaded
 	useEffect(() => {
 		if (editor) {
 			editor.commands.focus();

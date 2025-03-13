@@ -23,7 +23,6 @@ export async function POST(request) {
 		const generatedChatId = result.insertedId.toString();
 		return NextResponse.json({ generatedChatId }, { status: 200 });
 	} catch (err) {
-		console.log(err);
 		return NextResponse.json({ error: err }, { status: 500 });
 	}
 }

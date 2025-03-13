@@ -24,6 +24,7 @@ const useGlobalStore = create((set, get) => ({
 	currentChatId: null,
 	isInitialized: false,
 	currentChatTitle: "",
+	refreshChat: false,
 
 	// Setters
 	setIsAnswering: (bool) => set({ isAnswering: bool }),
@@ -33,6 +34,7 @@ const useGlobalStore = create((set, get) => ({
 	setMessages: (messages) => set({ messages: messages }),
 	setCurrentChat: (chat) => set({ currentChat: chat }),
 	setCurrentChatId: (chatId) => set({ currentChatId: chatId }),
+	setRefreshChat: () => set((state) => ({ refreshChat: !state.refreshChat })),
 
 	// Functions
 
@@ -66,6 +68,8 @@ const useGlobalStore = create((set, get) => ({
 				currentChatTitle: chatTitle,
 			});
 
+			state.setRefreshChat();
+
 			return generatedChatId;
 		}
 	},
@@ -82,7 +86,6 @@ const useGlobalStore = create((set, get) => ({
 		// Then it'll make a new one and return the ID and Chat object
 		// For local use
 
-		console.log(messageContent.split(" ").slice(0, 8).join(" "));
 		if (!state.isInitialized) {
 			const generatedChatId = await state.initializeChat(
 				state.currentChatId,
