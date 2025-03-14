@@ -9,10 +9,10 @@ export default function Sidebar() {
 	return (
 		<>
 			{/* Sidebar */}
-			<div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col max-h-full">
+			<div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col max-h-full font-sans">
 				{/* Logo */}
-				<div className="p-6 flex flex-row items-center justify-between">
-					<h3 className="text-2xl font-bold text-stone-800 tracking-tight">
+				<div className="p-6 flex flex-row items-center justify-between border-b">
+					<h3 className="text-3xl self-center font-bold font-headings text-stone-800 tracking-tighter">
 						Whooosh
 					</h3>
 					<button

@@ -10,7 +10,7 @@ export default function ChatButton({
 			{" "}
 			{/* Relative for positioning, group for hover target */}
 			<button
-				className="w-full text-start px-2 py-2 my-1 text-clip overflow-hidden whitespace-nowrap text-base font-medium hover:ring-gray-500 hover:ring-1"
+				className="w-full text-start px-2 py-2 my-1 text-clip overflow-hidden whitespace-nowrap text-[15px] font-medium hover:ring-gray-500 hover:ring-1"
 				key={chat._id}
 				onClick={() => handleChatClick(chat._id)}
 			>

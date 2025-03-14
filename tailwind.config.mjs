@@ -18,6 +18,10 @@ export default {
 					light: "#F8F9FA", // Soft White
 				},
 			},
+			fontFamily: {
+				sans: ["Inter", "system-ui", "sans-serif"],
+				headings: ["Overpass", "system-ui", "sans-serif"],
+			},
 		},
 	},
 	plugins: [],
