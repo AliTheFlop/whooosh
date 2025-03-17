@@ -3,15 +3,32 @@ import axios from "axios";
 import { v4 } from "uuid";
 import GetChat from "@/utils/GetChat";
 import SetupChat from "@/utils/SetupChat";
-import { remark } from "remark";
-import html from "remark-html";
 import DOMPurify from "dompurify";
-import { sendAnthropicChat } from "@/utils/GetChat";
+import { sendAnthropicChat } from "@/utils/SendMessageHelpers";
 import { sendGoogleChat } from "@/utils/SendMessageHelpers";
+import { marked } from "marked";
+
+const googleModels = ["gemini-2.0-flash", "gemini-1.5-flash"];
+const claudeModels = [
+	"claude-3-7-sonnet-latest",
+	"claude-3-5-sonnet-latest",
+	"claude-3-5-haiku-latest",
+	"claude-3-opus-latest",
+];
 
 async function markdownToHtml(markdown) {
-	const result = await remark().use(html).process(markdown);
-	return result.toString();
+	try {
+		marked.setOptions({
+			gfm: true,
+			breaks: true,
+			pedantic: false,
+		});
+		return marked(markdown);
+	} catch (error) {
+		console.error("Markdown conversion failed:", error);
+		// Fallback: wrap the markdown in a pre tag
+		return `<div class="markdown-fallback"> ${markdown}</div>`;
+	}
 }
 
 const useGlobalStore = create((set, get) => ({
@@ -20,7 +37,7 @@ const useGlobalStore = create((set, get) => ({
 	messages: [],
 	inputRef: null,
 	isAnswering: false,
-	activeModel: "gemini-2.0-flash",
+	activeModel: "claude-3-5-haiku-latest",
 	currentChatId: null,
 	isInitialized: false,
 	currentChatTitle: "",
@@ -30,7 +47,11 @@ const useGlobalStore = create((set, get) => ({
 	setIsAnswering: (bool) => set({ isAnswering: bool }),
 	setUser: (user) => set({ user }),
 	newMessage: (message) =>
-		set((state) => ({ messages: [...state.messages, message] })),
+		set((state) => {
+			const updatedMessages = [...state.messages];
+			updatedMessages.push(message);
+			return { messages: updatedMessages };
+		}),
 	setMessages: (messages) => set({ messages: messages }),
 	setCurrentChat: (chat) => set({ currentChat: chat }),
 	setCurrentChatId: (chatId) => set({ currentChatId: chatId }),
@@ -115,23 +136,28 @@ const useGlobalStore = create((set, get) => ({
 
 		try {
 			let result;
-			if (state.activeModel === "gemini-2.0-flash") {
-				console.log(state.messages);
+			if (googleModels.includes(state.activeModel)) {
 				result = await sendGoogleChat(
 					state.messages,
 					state.activeModel,
 					messageContent
 				);
-
-				console.log(result);
+			} else if (claudeModels.includes(state.activeModel)) {
+				result = await sendAnthropicChat(
+					state.messages,
+					state.activeModel,
+					messageContent
+				);
 			}
 
 			const markdownResponse = result.data.message;
-			console.log(markdownResponse);
 			const htmlResponse = await markdownToHtml(markdownResponse);
-			console.log(htmlResponse);
 			const sanitizedHtml = DOMPurify.sanitize(htmlResponse);
-			console.log(sanitizedHtml);
+
+			console.log("Raw API response:", result);
+			console.log("Markdown response:", markdownResponse);
+			console.log("HTML response:", htmlResponse);
+			console.log("Sanitized HTML:", sanitizedHtml);
 
 			const aiResponse = {
 				content: sanitizedHtml,
@@ -140,6 +166,7 @@ const useGlobalStore = create((set, get) => ({
 				role: "model",
 			};
 
+			console.log("Adding AI response to state:", aiResponse);
 			state.newMessage(aiResponse);
 
 			await axios.post(
@@ -150,7 +177,9 @@ const useGlobalStore = create((set, get) => ({
 				}
 			);
 		} catch (error) {
-			console.error(error);
+			console.error("Error details:", error);
+			console.error("Error message:", error.message);
+			console.error("Error stack:", error.stack);
 		}
 
 		set({ isAnswering: false });

@@ -206,6 +206,7 @@ pre[class*="language-"] {
 /* List styles */
 .markdown-body ul,
 .markdown-body ol {
+	list-style-type: disc;
 	padding-left: 2em;
 	margin-bottom: 1em;
 }
