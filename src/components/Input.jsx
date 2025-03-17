@@ -4,6 +4,7 @@ import useGlobalStore from "@/store/zustand";
 import Spinner from "@/components/Spinner";
 import { SearchIcon } from "lucide-react";
 import TipTap from "./TipTap";
+import ModelSelector from "./ModelSelector";
 
 export default function Input() {
 	const isAnswering = useGlobalStore((state) => state.isAnswering);
@@ -47,6 +48,7 @@ export default function Input() {
 					</button>
 				)}
 			</div>
+			<ModelSelector />
 		</div>
 	);
 }

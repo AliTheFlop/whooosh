@@ -56,6 +56,7 @@ const useGlobalStore = create((set, get) => ({
 	setCurrentChat: (chat) => set({ currentChat: chat }),
 	setCurrentChatId: (chatId) => set({ currentChatId: chatId }),
 	setRefreshChat: () => set((state) => ({ refreshChat: !state.refreshChat })),
+	setActiveModel: (model) => set({ activeModel: model }),
 
 	// Functions
 
