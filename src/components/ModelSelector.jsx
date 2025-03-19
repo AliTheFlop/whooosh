@@ -1,15 +1,15 @@
 import useGlobalStore from "@/store/zustand";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const models = {
 	"claude-3-7-sonnet-latest": {
 		name: "Claude 3.7 Sonnet",
-		icon: "/images/model-icons/claude-3.7-sonnet.svg",
+		icon: "/model-icons/claude-3.7-sonnet.png",
 	},
 	"claude-3-5-sonnet-latest": {
 		name: "Claude 3.5 Sonnet",
-		icon: "/images/model-icons/claude-3.5-sonnet.svg",
+		icon: "/model-icons/claude-3.5-sonnet.png",
 	},
 	"claude-3-5-haiku-latest": {
 		name: "Claude 3.5 Haiku",
@@ -17,15 +17,15 @@ const models = {
 	},
 	"claude-3-opus-latest": {
 		name: "Claude 3.0 Opus",
-		icon: "/images/model-icons/claude-3.0-opus.svg",
+		icon: "/model-icons/claude-3.0-opus.png",
 	},
-	"gemini-2-0-flash": {
+	"gemini-2.0-flash": {
 		name: "Gemini 2.0 Flash",
-		icon: "/images/model-icons/gemini-2.0-flash.svg",
+		icon: "/model-icons/gemini-2.0-flash.png",
 	},
-	"gemini-1-5-flash": {
+	"gemini-1.5-flash": {
 		name: "Gemini 1.5 Flash",
-		icon: "/images/model-icons/gemini-1.5-flash.svg",
+		icon: "/model-icons/gemini-1.5-flash.png",
 	},
 };
 
@@ -33,32 +33,78 @@ export default function ModelSelector() {
 	const activeModel = useGlobalStore((state) => state.activeModel);
 	const setActiveModel = useGlobalStore((state) => state.setActiveModel);
 	const [isOpen, setIsOpen] = useState(false);
+	const containerRef = useRef(null);
+
+	useEffect(() => {
+		// Function to handle clicks outside of the component
+		function handleClickOutside(event) {
+			if (
+				containerRef.current &&
+				!containerRef.current.contains(event.target)
+			) {
+				setIsOpen(false);
+			}
+		}
+
+		// Add event listener when dropdown is open
+		if (isOpen) {
+			document.addEventListener("mousedown", handleClickOutside);
+		}
+
+		// Clean up the event listener
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [isOpen]);
+
+	function handleChangeModel(key, model) {
+		setActiveModel(key);
+		setIsOpen(false);
+	}
 
 	const currentModel = models[activeModel];
-
-	console.log(activeModel);
-	console.log(currentModel);
 	return (
-		<div className="relative flex items-center justify-center">
-			<div className="border flex flex-row">
+		<div
+			className="relative flex items-center justify-start"
+			ref={containerRef}
+		>
+			{/* Trigger Button */}
+			<div
+				className="border border-gray-200 flex flex-row mt-2 rounded-lg px-4 py-2 gap-2 hover:bg-gray-50 cursor-pointer transition-colors duration-150 items-center"
+				onClick={() => setIsOpen((prev) => !prev)}
+			>
 				<Image
 					src={currentModel.icon}
 					alt={currentModel.name}
 					width={24}
 					height={24}
 				/>
-				<span>{currentModel.name}</span>
+				<span className="text-gray-700">{currentModel.name}</span>
 			</div>
-			<div className="hidden">
+
+			{/* Dropdown Menu */}
+			<div
+				className={`${
+					isOpen
+						? "opacity-100 translate-y-0"
+						: "opacity-0 translate-y-2 pointer-events-none"
+				} absolute bottom-12 flex flex-col bg-white border border-gray-200 rounded-lg shadow-lg transition-all duration-150 ease-in-out min-w-[200px]`}
+			>
 				{Object.entries(models).map(([key, model]) => (
-					<div key={key} onClick={() => setActiveModel(model)}>
+					<div
+						key={key}
+						onClick={() => handleChangeModel(key, model)}
+						className="flex flex-row items-center p-3 gap-3 hover:bg-blue-50 cursor-pointer transition-colors duration-150 border-b border-gray-100 last:border-none"
+					>
 						<Image
 							src={model.icon}
 							alt={model.name}
-							width={32}
-							height={32}
+							width={24}
+							height={24}
 						/>
-						<span>{model.name}</span>
+						<span className="text-gray-700 hover:text-blue-800">
+							{model.name}
+						</span>
 					</div>
 				))}
 			</div>

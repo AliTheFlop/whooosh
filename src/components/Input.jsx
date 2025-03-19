@@ -18,37 +18,39 @@ export default function Input() {
 
 	return (
 		<div className="border-t border-gray-100 p-4">
-			<div className="max-w-3xl mx-auto relative flex flex-row items-center">
-				<span className="absolute left-4 top-1/2 -translate-y-1/2">
-					<SearchIcon size={20} className="text-gray-400" />
-				</span>
+			<div className="max-w-3xl mx-auto relative flex flex-col">
+				<div className="flex flex-row items-center">
+					<span className="absolute left-4">
+						<SearchIcon size={20} className="text-gray-400" />
+					</span>
 
-				<TipTap sendMessage={sendMessage} />
-				{isAnswering ? (
-					<Spinner />
-				) : (
-					<button
-						className="ml-4 p-1 rounded-full bg-blue-800 hover:bg-blue-600 text-white shadow-md transition-all duration-200 flex items-center justify-center"
-						onClick={sendMessage}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
+					<TipTap sendMessage={sendMessage} />
+					{isAnswering ? (
+						<Spinner />
+					) : (
+						<button
+							className="ml-4 p-1 rounded-full bg-blue-800 hover:bg-blue-600 text-white shadow-md transition-all duration-200 flex items-center justify-center"
+							onClick={sendMessage}
 						>
-							<line x1="12" y1="19" x2="12" y2="5"></line>
-							<polyline points="5 12 12 5 19 12"></polyline>
-						</svg>
-					</button>
-				)}
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+							>
+								<line x1="12" y1="19" x2="12" y2="5"></line>
+								<polyline points="5 12 12 5 19 12"></polyline>
+							</svg>
+						</button>
+					)}
+				</div>
+				<ModelSelector />
 			</div>
-			<ModelSelector />
 		</div>
 	);
 }

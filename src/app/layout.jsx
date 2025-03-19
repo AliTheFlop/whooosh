@@ -1,8 +1,7 @@
 import "./globals.css";
-import "./prism.css";
+//import "./prism.css";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/auth-provider";
-import Prism from "prismjs";
 
 const inter = Inter({ subsets: ["latin"] });
 

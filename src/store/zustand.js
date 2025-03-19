@@ -151,6 +151,8 @@ const useGlobalStore = create((set, get) => ({
 				);
 			}
 
+			console.log(result);
+
 			const markdownResponse = result.data.message;
 			const htmlResponse = await markdownToHtml(markdownResponse);
 			const sanitizedHtml = DOMPurify.sanitize(htmlResponse);

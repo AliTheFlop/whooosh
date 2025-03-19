@@ -41,8 +41,6 @@ export async function POST(request) {
 			messages: messagesWithUser,
 		});
 
-		console.log(response);
-
 		return NextResponse.json(
 			{ message: response.content[0].text },
 			{ status: 201 }
