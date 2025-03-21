@@ -7,8 +7,6 @@ export async function POST(request) {
 		let transformedMessages;
 		let messagesWithUser;
 
-		console.log(previousMessages);
-
 		if (previousMessages.length > 0) {
 			transformedMessages = previousMessages.map((msg) => ({
 				role: msg.role === "user" ? "user" : "assistant",

@@ -7,8 +7,6 @@ export async function POST(request) {
 		let transformedMessages;
 		let messagesWithUser;
 
-		console.log("GOOGLE INCOMING");
-
 		if (previousMessages.length > 0) {
 			transformedMessages = previousMessages.map((msg) => ({
 				role: msg.role,
@@ -52,8 +50,6 @@ export async function POST(request) {
 		});
 
 		const aiResponse = response.response.text();
-
-		console.log(aiResponse);
 
 		if (aiResponse === "") {
 			console.log("AI HAS NO RESPONSE! Check logs.");

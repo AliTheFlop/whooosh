@@ -3,7 +3,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 
-function TipTap({ sendMessage }) {
+function TipTap({ sendMessage, setMessageContent }) {
 	const editor = useEditor({
 		extensions: [
 			StarterKit.configure({
@@ -26,13 +26,21 @@ function TipTap({ sendMessage }) {
 	const handleKeyDown = (e) => {
 		if (!editor) return;
 
+		const text = editor.getText().trim();
+
+		if (text) {
+			setMessageContent({ editor: editor, text: text });
+		}
+
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
-			const text = editor.getText().trim();
-			if (text) {
-				sendMessage(text);
-				editor.commands.clearContent();
-				editor.commands.focus();
+			try {
+				if (text) {
+					sendMessage(text);
+				}
+			} catch (error) {
+				console.log(error);
+				return `[Error 500] Something went wrong: ${error}`;
 			}
 		}
 	};

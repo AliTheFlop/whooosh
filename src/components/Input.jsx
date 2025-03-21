@@ -5,14 +5,21 @@ import Spinner from "@/components/Spinner";
 import { SearchIcon } from "lucide-react";
 import TipTap from "./TipTap";
 import ModelSelector from "./ModelSelector";
+import { useState } from "react";
 
 export default function Input() {
 	const isAnswering = useGlobalStore((state) => state.isAnswering);
 	const handleMessage = useGlobalStore((state) => state.handleMessage);
+	const [messageContent, setMessageContent] = useState({
+		editor: null,
+		text: "",
+	});
 
-	function sendMessage(messageContent) {
-		if (messageContent) {
-			handleMessage(messageContent);
+	function sendMessage(content) {
+		if (content) {
+			handleMessage(content);
+			messageContent.editor.commands.clearContent();
+			messageContent.editor.commands.focus();
 		}
 	}
 
@@ -24,13 +31,16 @@ export default function Input() {
 						<SearchIcon size={20} className="text-gray-400" />
 					</span>
 
-					<TipTap sendMessage={sendMessage} />
+					<TipTap
+						sendMessage={sendMessage}
+						setMessageContent={setMessageContent}
+					/>
 					{isAnswering ? (
 						<Spinner />
 					) : (
 						<button
 							className="ml-4 p-1 rounded-full bg-blue-800 hover:bg-blue-600 text-white shadow-md transition-all duration-200 flex items-center justify-center"
-							onClick={sendMessage}
+							onClick={() => sendMessage(messageContent.text)}
 						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
