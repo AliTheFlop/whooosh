@@ -1,21 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { MongoClient } from "mongodb";
+import clientPromise from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
-
-const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri);
-
-// Ensure connection is ready
-const connectDb = async () => {
-	try {
-		await client.connect();
-		return client;
-	} catch (error) {
-		console.error("Failed to connect to MongoDB", error);
-		throw error;
-	}
-};
 
 export const authOptions = {
 	providers: [
@@ -31,7 +17,7 @@ export const authOptions = {
 				}
 
 				try {
-					await connectDb();
+					const client = await clientPromise;
 					const db = client.db("Whooosh");
 					const users = db.collection("users");
 
