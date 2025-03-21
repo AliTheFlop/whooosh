@@ -1,8 +1,6 @@
-import { MongoClient, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
+import clientPromise from "@/lib/mongodb";
 import { NextResponse } from "next/server";
-
-const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri);
 
 // GET To get an older chat
 export async function GET(request, { params }) {
@@ -10,6 +8,7 @@ export async function GET(request, { params }) {
 		const param = await params;
 		const chatId = param.id;
 
+		const client = await clientPromise;
 		const db = client.db("Whooosh");
 		const chats = db.collection("chat");
 
