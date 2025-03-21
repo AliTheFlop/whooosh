@@ -79,7 +79,9 @@ export default function ModelSelector() {
 					width={24}
 					height={24}
 				/>
-				<span className="text-gray-700">{currentModel.name}</span>
+				<span className="text-gray-700 text-sm">
+					{currentModel.name}
+				</span>
 			</div>
 
 			{/* Dropdown Menu */}

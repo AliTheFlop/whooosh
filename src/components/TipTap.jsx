@@ -4,26 +4,15 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Spinner from "@/components/Spinner";
 import useGlobalStore from "@/store/zustand";
-import { useState } from "react";
 import ModelSelector from "./ModelSelector";
 
 export default function TipTap() {
 	const isAnswering = useGlobalStore((state) => state.isAnswering);
 	const handleMessage = useGlobalStore((state) => state.handleMessage);
-	const [messageContent, setMessageContent] = useState("");
-
-	function sendMessage(content) {
-		if (content) {
-			handleMessage(content);
-			editor.commands.clearContent();
-			editor.commands.focus();
-		}
-	}
 
 	const editor = useEditor({
 		extensions: [
 			StarterKit.configure({
-				// Disable features to keep it simple like a textarea
 				heading: false,
 				codeBlock: false,
 				blockquote: false,
@@ -31,39 +20,27 @@ export default function TipTap() {
 				table: false,
 			}),
 			Placeholder.configure({
-				placeholder: "Let's get a chat going!",
+				placeholder: "Type your message...",
 			}),
 		],
 		content: "",
 		autofocus: true,
-		immediatelyRender: false,
 	});
 
-	function handleButtonSubmit() {
+	function sendMessage() {
+		if (!editor) return;
 		const text = editor.getText().trim();
-
 		if (text) {
-			try {
-				sendMessage(text);
-			} catch (err) {
-				console.error(err);
-			}
+			handleMessage(text);
+			editor.commands.clearContent();
 		}
 	}
+
 	const handleKeyDown = (e) => {
 		if (!editor) return;
-
 		if (e.key === "Enter" && !e.shiftKey) {
 			e.preventDefault();
-			const text = editor.getText().trim();
-			try {
-				if (text) {
-					sendMessage(text);
-				}
-			} catch (error) {
-				console.log(error);
-				return `[Error 500] Something went wrong: ${error}`;
-			}
+			sendMessage();
 		}
 	};
 
@@ -75,71 +52,79 @@ export default function TipTap() {
 
 	return (
 		<>
-			<div
-				className="mainTextInput overflow-y-scroll scrollbar-hide flex flex-row justify-between items-center w-5/6 min-h-12 h-auto max-x-36 pl-4 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 focus-within:outline-none transition-colors  leading-tight py-3"
-				style={{
-					minHeight: "48px !important",
-					maxHeight: "150px",
+			<style
+				dangerouslySetInnerHTML={{
+					__html: `
+            .ProseMirror {
+              min-height: 1.5rem;
+              outline: none;
+            }
+            
+            .ProseMirror p {
+              margin: 0;
+            }
+
+            .ProseMirror p.is-editor-empty:first-child::before {
+              content: attr(data-placeholder);
+              float: left;
+              color: #9ca3af; /* Tailwind's gray-400 */
+              pointer-events: none;
+              height: 0;
+            }
+          `,
 				}}
-			>
-				<style
-					dangerouslySetInnerHTML={{
-						__html: `
+			/>
+			<div className="w-full max-w-2xl mx-auto">
+				<div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-visible">
+					{/* Editor Content */}
+					<div className="p-4 pb-0">
+						<EditorContent
+							editor={editor}
+							onKeyDown={handleKeyDown}
+							className="min-h-[50px] max-h-[200px] overflow-y-auto scrollbar-hide"
+						/>
+					</div>
 
-						.ProseMirror {
-						min-height: 1.5rem;
-						outline: none;
-						}
-						
-						.ProseMirror p {
-						margin: 0;
-						}
+					{/* Bottom Actions */}
+					<div className="flex items-center justify-between p-4 border-t border-gray-200">
+						<ModelSelector />
 
-						.ProseMirror p.is-editor-empty:first-child::before {
-						content: attr(data-placeholder);
-						float: left;
-						color: #9ca3af; /* Tailwind's gray-400 */
-						pointer-events: none;
-						height: 0;
-						}
-					`,
-					}}
-				/>
-				<div className="flex flex-row w-full justify-between items-center overflow-y-scroll scrollbar-hide">
-					<EditorContent
-						editor={editor}
-						className="w-5/6"
-						onKeyDown={handleKeyDown}
-					/>{" "}
-				</div>
-				<div>
-					{isAnswering ? (
-						<Spinner />
-					) : (
 						<button
-							className="mr-4 p-1 rounded-full bg-blue-800 hover:bg-blue-600 text-white shadow-md transition-all duration-200 flex items-center justify-center"
-							onClick={() => handleButtonSubmit()}
+							onClick={sendMessage}
+							disabled={isAnswering}
+							className={`
+                flex items-center justify-center 
+                w-10 h-10 rounded-full 
+                ${
+					isAnswering
+						? "bg-gray-200 cursor-not-allowed"
+						: "bg-blue-600 hover:bg-blue-700 text-white"
+				}
+                transition-colors duration-200
+              `}
 						>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								width="24"
-								height="24"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-							>
-								<line x1="12" y1="19" x2="12" y2="5"></line>
-								<polyline points="5 12 12 5 19 12"></polyline>
-							</svg>
+							{isAnswering ? (
+								<Spinner />
+							) : (
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="h-6 w-6"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+									/>
+								</svg>
+							)}
 						</button>
-					)}
+					</div>
 				</div>
 			</div>
-
-			<ModelSelector />
 		</>
 	);
 }
