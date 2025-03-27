@@ -25,6 +25,7 @@ export default function TipTap() {
 		],
 		content: "",
 		autofocus: true,
+		immediatelyRender: false,
 	});
 
 	function sendMessage() {
