@@ -42,12 +42,15 @@ export async function DELETE(request, { params }) {
 		const param = await params;
 		const chatId = param.id;
 
+		const client = await clientPromise;
 		const db = client.db("Whooosh");
 		const chats = db.collection("chat");
 
 		const result = await chats.deleteOne({
 			_id: ObjectId.createFromHexString(chatId),
 		});
+
+		console.log(result);
 
 		if (result.deletedCount === 1) {
 			return NextResponse.json(
@@ -61,6 +64,7 @@ export async function DELETE(request, { params }) {
 			);
 		}
 	} catch (err) {
+		console.log(err);
 		return NextResponse.json(
 			{ error: true, message: err },
 			{ status: 500 }
