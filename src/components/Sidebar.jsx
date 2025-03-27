@@ -12,11 +12,11 @@ export default function Sidebar() {
 			<div className="w-80 bg-gray-50 border-r border-gray-200 flex flex-col max-h-full font-sans">
 				{/* Logo */}
 				<div className="p-6 flex flex-row items-center justify-between border-b">
-					<h3 className="text-3xl self-center font-bold font-headings text-stone-800 tracking-tighter">
+					<h3 className="text-2xl self-center font-bold font-headings text-stone-800 tracking-tighter">
 						Whooosh
 					</h3>
 					<button
-						className="px-4 py-2 bg-blue-700 text-white font-bold rounded-full"
+						className="px-3 py-2 bg-blue-700 hover:bg-blue-600 transition-all duration-200 text-white text-sm font-bold rounded-full"
 						onClick={() => newChat()}
 					>
 						New Chat
