@@ -1,14 +1,12 @@
-import { MongoClient } from "mongodb";
+import clientPromise from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-
-const uri = process.env.MONGODB_URI;
-const client = new MongoClient(uri);
 
 export async function POST(request) {
 	try {
 		const body = await request.json();
 
+		const client = await clientPromise;
 		const db = client.db("Whooosh");
 		const users = db.collection("users");
 
