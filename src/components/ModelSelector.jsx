@@ -57,7 +57,7 @@ export default function ModelSelector() {
 		};
 	}, [isOpen]);
 
-	function handleChangeModel(key, model) {
+	function handleChangeModel(key) {
 		setActiveModel(key);
 		setIsOpen(false);
 	}
@@ -70,7 +70,7 @@ export default function ModelSelector() {
 		>
 			{/* Trigger Button */}
 			<div
-				className="border border-gray-200 flex flex-row mt-2 rounded-lg px-4 py-2 gap-2 hover:bg-gray-50 cursor-pointer transition-colors duration-150 items-center"
+				className="border border-gray-200 flex flex-row rounded-lg px-4 py-2 gap-2 hover:bg-gray-50 cursor-pointer transition-colors duration-150 items-center"
 				onClick={() => setIsOpen((prev) => !prev)}
 			>
 				<Image
@@ -90,13 +90,13 @@ export default function ModelSelector() {
 					isOpen
 						? "opacity-100 translate-y-0"
 						: "opacity-0 translate-y-2 pointer-events-none"
-				} absolute bottom-12 flex flex-col bg-white border border-gray-200 rounded-lg shadow-lg transition-all duration-150 ease-in-out min-w-[200px]`}
+				} absolute bottom-12 flex flex-col bg-white border border-gray-200 rounded-lg shadow-lg transition-all duration-150 ease-in-out`}
 			>
 				{Object.entries(models).map(([key, model]) => (
 					<div
 						key={key}
 						onClick={() => handleChangeModel(key, model)}
-						className="flex flex-row items-center p-3 gap-3 hover:bg-blue-50 cursor-pointer transition-colors duration-150 border-b border-gray-100 last:border-none"
+						className="flex flex-row items-center p-3 px-2 gap-3 hover:bg-blue-50 cursor-pointer transition-colors duration-150 border-b border-gray-100 last:border-none whitespace-nowrap"
 					>
 						<Image
 							src={model.icon}
@@ -104,7 +104,7 @@ export default function ModelSelector() {
 							width={24}
 							height={24}
 						/>
-						<span className="text-gray-700 hover:text-blue-800">
+						<span className="text-gray-700 hover:text-blue-800 text-sm">
 							{model.name}
 						</span>
 					</div>

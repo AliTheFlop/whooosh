@@ -56,23 +56,23 @@ export default function TipTap() {
 			<style
 				dangerouslySetInnerHTML={{
 					__html: `
-            .ProseMirror {
-              min-height: 1.5rem;
-              outline: none;
-            }
-            
-            .ProseMirror p {
-              margin: 0;
-            }
+			.ProseMirror {
+			  min-height: 1.5rem;
+			  outline: none;
+			}
+			
+			.ProseMirror p {
+			  margin: 0;
+			}
 
-            .ProseMirror p.is-editor-empty:first-child::before {
-              content: attr(data-placeholder);
-              float: left;
-              color: #9ca3af; /* Tailwind's gray-400 */
-              pointer-events: none;
-              height: 0;
-            }
-          `,
+			.ProseMirror p.is-editor-empty:first-child::before {
+			  content: attr(data-placeholder);
+			  float: left;
+			  color: #9ca3af; /* Tailwind's gray-400 */
+			  pointer-events: none;
+			  height: 0;
+			}
+		  `,
 				}}
 			/>
 			<div className="w-full max-w-2xl mx-auto">
@@ -87,22 +87,22 @@ export default function TipTap() {
 					</div>
 
 					{/* Bottom Actions */}
-					<div className="flex items-center justify-between p-4 border-t border-gray-200">
+					<div className="flex items-center justify-between p-4 border-gray-200">
 						<ModelSelector />
 
 						<button
 							onClick={sendMessage}
 							disabled={isAnswering}
 							className={`
-                flex items-center justify-center 
-                w-10 h-10 rounded-full 
-                ${
+				flex items-center justify-center 
+				p-1 rounded-full 
+				${
 					isAnswering
 						? "bg-gray-200 cursor-not-allowed"
 						: "bg-blue-600 hover:bg-blue-700 text-white"
 				}
-                transition-colors duration-200
-              `}
+				transition-colors duration-200
+			  `}
 						>
 							{isAnswering ? (
 								<Spinner />
@@ -118,7 +118,7 @@ export default function TipTap() {
 										strokeLinecap="round"
 										strokeLinejoin="round"
 										strokeWidth={2}
-										d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+										d="M5 15l7-7 7 7"
 									/>
 								</svg>
 							)}
