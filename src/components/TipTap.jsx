@@ -75,8 +75,8 @@ export default function TipTap() {
 		  `,
 				}}
 			/>
-			<div className="w-full max-w-2xl mx-auto">
-				<div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-visible">
+			<div className="w-full mx-auto">
+				<div className="bg-white border border-gray-200 rounded-2xl shadow-xl overflow-visible">
 					{/* Editor Content */}
 					<div className="p-4 pb-0">
 						<EditorContent

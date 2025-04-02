@@ -70,12 +70,17 @@ export const authOptions = {
 			return token;
 		},
 		async session({ session, token }) {
-			// Add user ID to the session
-			if (session.user) {
-				session.user.id = token.id;
-				// Add any other user properties you want available in the session
+			try {
+				// Add user ID to the session
+				if (session.user) {
+					session.user.id = token.id;
+					// Add any other user properties you want available in the session
+				}
+				return session;
+			} catch (err) {
+				console.error(err);
+				return err;
 			}
-			return session;
 		},
 	},
 	pages: {
@@ -83,6 +88,7 @@ export const authOptions = {
 		// error: '/auth/error', // Error page
 	},
 	secret: process.env.NEXTAUTH_SECRET, // Use a strong secret key
+	debug: true,
 };
 
 const handler = NextAuth(authOptions);

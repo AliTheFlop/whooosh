@@ -22,7 +22,9 @@ export default function ChatsSidebar(userId) {
 		try {
 			const result = await axios.delete(`/api/chat/${id}`);
 			setRefreshChat();
-			newChat();
+			if (currentChatId === id) {
+				newChat();
+			}
 		} catch (error) {
 			console.log(error);
 		}

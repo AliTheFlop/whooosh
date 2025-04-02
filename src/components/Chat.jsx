@@ -32,8 +32,6 @@ export default function Chat({ chatId, userId }) {
 		setTimeout(scrollToBottom, 100);
 	}, [messages]);
 
-	console.log(messages);
-
 	return (
 		<>
 			{currentChatTitle ? (

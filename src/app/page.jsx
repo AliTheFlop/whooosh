@@ -13,6 +13,7 @@ export default function Home() {
 	const { data: session, status } = useSession();
 
 	useEffect(() => {
+		console.log("hmm");
 		if (session) {
 			setUser(session.user);
 		}
@@ -23,7 +24,7 @@ export default function Home() {
 			<Sidebar />
 
 			{/* Chat Area */}
-			<div className="flex-1 flex flex-col bg-white">
+			<div className="flex-1 flex flex-col bg-white relative">
 				{/* Messages */}
 				<div className="flex-1 overflow-y-auto overflow-x-hidden">
 					{session ? (

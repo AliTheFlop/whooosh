@@ -204,14 +204,20 @@ pre[class*="language-"] {
 }
 
 /* List styles */
-.markdown-body ul,
-.markdown-body ol {
+.markdown-body ul {
+	list-style-type: disc;
 	padding-left: 2em;
+	margin-bottom: 1em;
+}
+
+.markdown-body ol {
+	font-weight: 700;
 	margin-bottom: 1em;
 }
 
 .markdown-body li {
 	margin-bottom: 0.5em;
+	font-weight: normal;
 }
 
 /* Code styles */
