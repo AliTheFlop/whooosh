@@ -79,7 +79,7 @@ export default function ModelSelector() {
 					width={24}
 					height={24}
 				/>
-				<span className="text-gray-700 text-sm font-bold">
+				<span className="text-gray-700 text-base">
 					{currentModel.name}
 				</span>
 			</div>
