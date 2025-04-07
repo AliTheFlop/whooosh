@@ -70,7 +70,7 @@ export default function ModelSelector() {
 		>
 			{/* Trigger Button */}
 			<div
-				className="border border-gray-200 flex flex-row rounded-lg px-4 py-2 gap-2 hover:bg-gray-50 cursor-pointer transition-colors duration-150 items-center"
+				className="flex flex-row rounded-lg pr-4 pb-2 gap-2 hover:bg-gray-50 cursor-pointer transition-colors duration-150 items-center"
 				onClick={() => setIsOpen((prev) => !prev)}
 			>
 				<Image
@@ -79,7 +79,7 @@ export default function ModelSelector() {
 					width={24}
 					height={24}
 				/>
-				<span className="text-gray-700 text-sm">
+				<span className="text-gray-700 text-sm font-bold">
 					{currentModel.name}
 				</span>
 			</div>
@@ -91,6 +91,7 @@ export default function ModelSelector() {
 						? "opacity-100 translate-y-0"
 						: "opacity-0 translate-y-2 pointer-events-none"
 				} absolute bottom-12 flex flex-col bg-white border border-gray-200 rounded-lg shadow-lg transition-all duration-150 ease-in-out`}
+				style={{ minWidth: "max-content" }}
 			>
 				{Object.entries(models).map(([key, model]) => (
 					<div
@@ -104,7 +105,7 @@ export default function ModelSelector() {
 							width={24}
 							height={24}
 						/>
-						<span className="text-gray-700 hover:text-blue-800 text-sm">
+						<span className="text-gray-700 hover:text-blue-800 text-sm font-bold">
 							{model.name}
 						</span>
 					</div>

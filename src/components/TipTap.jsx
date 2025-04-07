@@ -20,7 +20,7 @@ export default function TipTap() {
 				table: false,
 			}),
 			Placeholder.configure({
-				placeholder: "Type your message...",
+				placeholder: "How can I help?",
 			}),
 		],
 		content: "",
@@ -87,7 +87,7 @@ export default function TipTap() {
 					</div>
 
 					{/* Bottom Actions */}
-					<div className="flex items-center justify-between p-4 border-gray-200">
+					<div className="flex items-center justify-between px-4 pb-4 pt-2 border-gray-200">
 						<ModelSelector />
 
 						<button
@@ -117,7 +117,7 @@ export default function TipTap() {
 									<path
 										strokeLinecap="round"
 										strokeLinejoin="round"
-										strokeWidth={2}
+										strokeWidth={3}
 										d="M5 15l7-7 7 7"
 									/>
 								</svg>
