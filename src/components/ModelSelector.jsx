@@ -70,16 +70,16 @@ export default function ModelSelector() {
 		>
 			{/* Trigger Button */}
 			<div
-				className="flex flex-row rounded-lg pr-4 pb-2 gap-2 hover:bg-gray-50 cursor-pointer transition-colors duration-150 items-center"
+				className="flex flex-row rounded-lg pb-2 pl-2 gap-2 hover:bg-gray-50 cursor-pointer transition-colors duration-150 items-center"
 				onClick={() => setIsOpen((prev) => !prev)}
 			>
 				<Image
 					src={currentModel.icon}
 					alt={currentModel.name}
-					width={24}
-					height={24}
+					width={20}
+					height={20}
 				/>
-				<span className="text-gray-700 text-base">
+				<span className="text-gray-700 text-sm">
 					{currentModel.name}
 				</span>
 			</div>

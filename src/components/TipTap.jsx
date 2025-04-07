@@ -87,38 +87,35 @@ export default function TipTap() {
 					</div>
 
 					{/* Bottom Actions */}
-					<div className="flex items-center justify-between px-4 pb-4 pt-2 border-gray-200">
+					<div className="flex items-center justify-between px-2 pb-2 pt-2 border-gray-200">
 						<ModelSelector />
 
 						<button
 							onClick={sendMessage}
 							disabled={isAnswering}
-							className={`
-				flex items-center justify-center 
-				p-1 rounded-full 
-				${
-					isAnswering
-						? "bg-gray-200 cursor-not-allowed"
-						: "bg-blue-600 hover:bg-blue-700 text-white"
-				}
-				transition-colors duration-200
-			  `}
+							className={`flex items-center justify-center 
+								p-2 rounded-full transition-all duration-300 
+								${
+									isAnswering
+										? "bg-gray-200 cursor-not-allowed"
+										: "bg-blue-500 hover:bg-blue-600 text-white shadow-md hover:shadow-lg"
+								}`}
 						>
 							{isAnswering ? (
 								<Spinner />
 							) : (
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
-									className="h-6 w-6"
+									className="h-4 w-4"
 									fill="none"
 									viewBox="0 0 24 24"
 									stroke="currentColor"
+									strokeWidth={3}
 								>
 									<path
 										strokeLinecap="round"
 										strokeLinejoin="round"
-										strokeWidth={3}
-										d="M5 15l7-7 7 7"
+										d="M4 12l8-8m0 0l8 8m-8-8v16"
 									/>
 								</svg>
 							)}
